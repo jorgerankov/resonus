@@ -94,7 +94,8 @@ internal object CarArtwork {
       builder.setArtworkUri(Uri.parse(base + artworkUrl.removePrefix(RES_SCHEME)))
       return 0
     }
-    val bytes = if (embed) localArtworkData(artworkUrl, maxDim) else null
+    val isLocal = artworkUrl.startsWith("file://")
+    val bytes = if (embed || isLocal) localArtworkData(artworkUrl, if (embed) maxDim else THUMB_DIM) else null
     if (bytes != null) {
       builder.setArtworkData(bytes, MediaMetadata.PICTURE_TYPE_FRONT_COVER)
       return bytes.size
@@ -103,6 +104,7 @@ internal object CarArtwork {
       contentUri(artworkUrl)?.let { builder.setArtworkUri(it) }
       return 0
     }
+    if (isLocal) return 0
     builder.setArtworkUri(Uri.parse(artworkUrl))
     return 0
   }

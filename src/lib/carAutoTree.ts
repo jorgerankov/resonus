@@ -11,6 +11,7 @@
  */
 import { AppState } from 'react-native';
 
+import { CACHED_COVER } from '@/api/data';
 import * as data from '@/api/data';
 import { type Album, type Artist, type Playlist, type Song } from '@/api/subsonic';
 import { songsLabel, tg } from '@/i18n';
@@ -83,7 +84,8 @@ function trackMediaId(parentId: string, songId: string): string {
 }
 
 function art(id: string | undefined): string | undefined {
-  return data.coverArtUrl(id, data.COVER.card);
+  const url = data.coverArtUrl(id, data.COVER.card);
+  return url && !url.startsWith(CACHED_COVER) ? url : undefined;
 }
 
 /**
